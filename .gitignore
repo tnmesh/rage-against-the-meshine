@@ -131,3 +131,5 @@ dist
 
 # Replit debugger
 .breakpoints
+/src/generated/prisma
+/prisma/discord.db

@@ -1,17 +1,26 @@
-version: '3.8'
-
 services:
   bot:
+    container_name: discord-bot
     image: ghcr.io/baymesh/rage-against-the-meshine-nextgen:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
     environment:
-    - DISCORD_TOKEN=${DISCORD_TOKEN}
-    - DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID}
-    - DISCORD_GUILD=${DISCORD_GUILD}
-    - DISCORD_CHANNEL_LF=${DISCORD_CHANNEL_LF}
-    - DISCORD_CHANNEL_MS=${DISCORD_CHANNEL_MS}
-    - DISCORD_CHANNEL_HAB=${DISCORD_CHANNEL_HAB}
-    - MQTT_BROKER_URL=${MQTT_BROKER_URL}
-    - MQTT_TOPICS=${MQTT_TOPICS}
-    - REDIS_URL=${REDIS_URL}
-    - ENVIRONMENT=${ENVIRONMENT}
-    - NODE_INFO_UPDATES=${NODE_INFO_UPDATES}
+      - DISCORD_TOKEN=${DISCORD_TOKEN}
+      - DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID}
+      - DISCORD_GUILD=${DISCORD_GUILD}
+      - DISCORD_CHANNEL_LF=${DISCORD_CHANNEL_LF}
+      - DISCORD_CHANNEL_MS=${DISCORD_CHANNEL_MS}
+      - DISCORD_CHANNEL_HAB=${DISCORD_CHANNEL_HAB}
+      - MQTT_BROKER_URL=${MQTT_BROKER_URL}
+      - MQTT_TOPICS=${MQTT_TOPICS}
+      - REDIS_URL=${REDIS_URL}
+      - ENVIRONMENT=${ENVIRONMENT}
+      - NODE_INFO_UPDATES=${NODE_INFO_UPDATES}
+    networks:
+      - web
+networks:
+  web:
+    external: true

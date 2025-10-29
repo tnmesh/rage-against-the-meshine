@@ -1,0 +1,27 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+  binaryTargets = ["native", "debian-openssl-1.1.x"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Node {
+  id                  String      @id
+  longName            String
+  nodeInfo            NodeInfo?
+  discordId String?
+}
+
+model NodeInfo {
+  nodeId    String   @id
+  node      Node     @relation(fields: [nodeId], references: [id])
+  hopStart  Int
+  updatedAt DateTime
+}

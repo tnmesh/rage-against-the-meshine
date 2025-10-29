@@ -9,6 +9,7 @@ RUN npm install
 
 COPY . .
 
+RUN apt-get update -y && apt-get install -y openssl
 RUN git clone https://github.com/meshtastic/protobufs.git src/protobufs
 
 # Stage 2: Create the final image
@@ -21,3 +22,4 @@ RUN npm install -g tsx
 COPY --from=builder /app /app
 
 CMD [ "tsx", "index.ts" ]
+

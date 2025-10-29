@@ -20,11 +20,13 @@ import MeshPacketCache, {
   PacketGroup,
 } from "./src/MeshPacketCache";
 import meshRedis from "./src/MeshRedis";
+import meshDb from "./src/MeshDB";
 import logger from "./src/Logger";
 import Commands, { CommandType } from "./src/Commands";
 import { fetchDiscordChannel } from "./src/DiscordUtils";
 import { processTextMessage } from "./src/MessageUtils";
 import { handleMqttMessage } from "./src/MqttUtils";
+import meshDB from "./src/MeshDB";
 
 // generate a pseduo uuid kinda thing to use as an instance id
 const INSTANCE_ID = (() => {
@@ -88,6 +90,7 @@ const client: Client = new Client({
 });
 
 await meshRedis.init(REDIS_URL);
+await meshDB.init();
 
 // Register the slash command with Discord using the REST API.
 const rest = new REST({ version: "10" }).setToken(DISCORD_TOKEN);
