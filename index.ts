@@ -18,18 +18,13 @@ import mqtt from "mqtt";
 import FifoCache from "./src/FifoCache";
 import MeshPacketCache, {
   PacketGroup,
-  DecodedPosition,
-  decodedPositionToString,
 } from "./src/MeshPacketCache";
 import meshRedis from "./src/MeshRedis";
 import logger from "./src/Logger";
 import Commands, { CommandType } from "./src/Commands";
-import { nodeHex2id, nodeId2hex, fetchNodeId } from "./src/NodeUtils";
-import { createDiscordMessage } from "./src/DiscordMessageUtils";
-import { fetchUserRoles, fetchDiscordChannel } from "./src/DiscordUtils";
+import { fetchDiscordChannel } from "./src/DiscordUtils";
 import { processTextMessage } from "./src/MessageUtils";
 import { handleMqttMessage } from "./src/MqttUtils";
-import Command from "./src/commands/Command";
 
 // generate a pseduo uuid kinda thing to use as an instance id
 const INSTANCE_ID = (() => {
