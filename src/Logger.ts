@@ -8,6 +8,11 @@ class Logger {
   instanceId: string;
   logLevel: string;
 
+  constructor() {
+    this.instanceId = '';
+    this.logLevel = 'DEBUG';
+  }
+
   init(instanceId: string) {
     this.instanceId = instanceId;
   }

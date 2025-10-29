@@ -2,8 +2,10 @@ import { nodeId2hex } from "./NodeUtils";
 import { createDiscordMessage } from "./DiscordMessageUtils";
 import meshRedis from "./MeshRedis";
 import logger from "./Logger";
+import { PacketGroup } from "./MeshPacketCache";
+import { Client, Guild } from "discord.js";
 
-const processTextMessage = async (packetGroup, client, guild, discordMessageIdCache, habChannel, msChannel, lfChannel) => {
+const processTextMessage = async (packetGroup: PacketGroup, client: Client, guild: Guild, discordMessageIdCache, habChannel, msChannel, lfChannel) => {
   const packet = packetGroup.serviceEnvelopes[0].packet;
   let text = packet.decoded.payload.toString();
   const to = nodeId2hex(packet.to);
@@ -80,6 +82,7 @@ const processTextMessage = async (packetGroup, client, guild, discordMessageIdCa
     // send new message
     logger.info("Sending message: " + packet.id.toString());
     let discordMessage;
+
     if (
       packet.decoded.replyId &&
       packet.decoded.replyId > 0 &&
@@ -88,6 +91,7 @@ const processTextMessage = async (packetGroup, client, guild, discordMessageIdCa
       const discordMessageId = discordMessageIdCache.get(
         packet.decoded.replyId.toString(),
       );
+
       const existingMessage =
         await discordChannel.messages.fetch(discordMessageId);
       discordMessage = await existingMessage.reply(content);

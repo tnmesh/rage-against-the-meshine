@@ -1,15 +1,16 @@
-import { GuildMember, User as DiscordUser, userMention } from "discord.js";
+import { GuildMember, User as DiscordUser, userMention, Guild, Client } from "discord.js";
 import { nodeHex2id, nodeId2hex } from "./NodeUtils";
 import meshRedis from "./MeshRedis";
 import logger from "./Logger";
-import { DecodedPosition, decodedPositionToString } from "./MeshPacketCache";
+import { DecodedPosition, decodedPositionToString, PacketGroup } from "./MeshPacketCache";
 
-export const createDiscordMessage = async (packetGroup, text, balloonNode, client, guild) => {
+export const createDiscordMessage = async (packetGroup: PacketGroup, text: string, balloonNode: boolean, client: Client, guild: Guild) => {
   try {
     const packet = packetGroup.serviceEnvelopes[0].packet;
     const from = nodeId2hex(packet.from);
     const nodeIdHex = nodeId2hex(from);
     const portNum = packet?.decoded?.portnum;
+    logger.info(`portNum: ${portNum}`);
     let msgText = text;
 
     let nodeInfos = await meshRedis.getNodeInfos(
@@ -28,21 +29,26 @@ export const createDiscordMessage = async (packetGroup, text, balloonNode, clien
 
     const discordUserId = await meshRedis.getDiscordUserId(nodeIdHex);
     logger.info(`nodeIdHex: ${nodeIdHex}, discordUserId: ${discordUserId}`);
+
     let ownerField;
     if (discordUserId) {
       let guildUser: GuildMember | DiscordUser | undefined;
       const user: DiscordUser = await client.users.fetch(discordUserId);
+
       try {
         guildUser = await guild.members.fetch(discordUserId);
       } catch (e) {
         logger.error(e);
       }
+
       if (!guildUser) {
         logger.error(
           `User ${discordUserId} not found in guild, using global user.`,
         );
+
         guildUser = user;
       }
+
       const userAvatarUrl = guildUser.displayAvatarURL();
       if (userAvatarUrl && userAvatarUrl.length > 0) {
         avatarUrl = userAvatarUrl;
@@ -98,7 +104,7 @@ export const createDiscordMessage = async (packetGroup, text, balloonNode, clien
       mapUrl = `https://api.smerty.org/api/v1/maps/static?lat=${position.latitudeI / 10000000}&lon=${position.longitudeI / 10000000}&width=400&height=400&zoom=12`;
     }
 
-    logger.info(mapUrl);
+    logger.info(`mapUrl: ${mapUrl}`);
 
     if (ownerField) {
       infoFields.push({
@@ -110,7 +116,7 @@ export const createDiscordMessage = async (packetGroup, text, balloonNode, clien
 
     infoFields.push({
       name: "Packet",
-      value: `[${packetGroup.id.toString(16)}](https://meshview.bayme.sh/packet/${packetGroup.id})`,
+      value: `[${packetGroup.id.toString(16)}](https://malla.tnmesh.org/mesh-packet/${packetGroup.id})`,
       inline: true,
     });
 
@@ -168,10 +174,10 @@ export const createDiscordMessage = async (packetGroup, text, balloonNode, clien
           if (envelope.gatewayId.replace("!", "") === nodeIdHex) {
             hopText = `(Self Gated)`;
           }
-          if (maxHopStart !== envelope.packet.hopStart) {
-          }
-          if (envelope.mqttServer === "public") {
-          }
+          // if (maxHopStart !== envelope.packet.hopStart) {
+          // }
+          // if (envelope.mqttServer === "public") {
+          // }
         } else {
           hopText = "Unknown";
         }
@@ -189,7 +195,7 @@ export const createDiscordMessage = async (packetGroup, text, balloonNode, clien
 
         const gatewayFieldText =
           `[${gatewayDisplayName} ${hopText}` +
-          `](https://meshview.bayme.sh/packet_list/${nodeHex2id(envelope.gatewayId.replace("!", ""))})`;
+          `](https://malla.tnmesh.org/node/${nodeHex2id(envelope.gatewayId.replace("!", ""))})`;
 
         if (!gatewayGroups[hopGroup]) {
           gatewayGroups[hopGroup] = [];
@@ -219,8 +225,8 @@ export const createDiscordMessage = async (packetGroup, text, balloonNode, clien
         lines.forEach((line) => {
           if (
             currentChunk.length +
-              line.length +
-              (currentChunk.length > 0 ? 1 : 0) >
+            line.length +
+            (currentChunk.length > 0 ? 1 : 0) >
             1024
           ) {
             gatewayFields2.push({
@@ -253,13 +259,13 @@ export const createDiscordMessage = async (packetGroup, text, balloonNode, clien
         "https://cdn.discordapp.com/app-icons/1240017058046152845/295e77bec5f9a44f7311cf8723e9c332.png",
       embeds: [
         {
-          url: `https://meshview.bayme.sh/packet_list/${packet.from}`,
+          url: `https://malla.tnmesh.org/node/${packet.from}`,
           color: 6810260,
           timestamp: new Date(packet.rxTime * 1000).toISOString(),
 
           author: {
             name: `${nodeInfos[nodeIdHex] ? nodeInfos[nodeIdHex].longName : "Unknown"}`,
-            url: `https://meshview.bayme.sh/packet_list/${packet.from}`,
+            url: `https://malla.tnmesh.org/node/${packet.from}`,
             icon_url: avatarUrl,
           },
           title: `${nodeInfos[nodeIdHex] ? nodeInfos[nodeIdHex].shortName : "UNK"}`,

@@ -1,5 +1,6 @@
 import crypto from "crypto";
 import { Data } from "../index.ts";
+import { MeshPacket } from "./MeshPacketCache.ts";
 
 const decryptionKeys = [
   "1PG7OiApB1nwvP+rz05pAQ==", // add default "AQ==" decryption key
@@ -28,16 +29,16 @@ function createNonce(packetId, fromNode) {
  * https://github.com/crypto-smoke/meshtastic-go/blob/develop/radio/aes.go#L42
  * https://github.com/pdxlocations/Meshtastic-MQTT-Connect/blob/main/meshtastic-mqtt-connect.py#L381
  */
-function decrypt(packet) {
+function decrypt(packet: MeshPacket) {
   // attempt to decrypt with all available decryption keys
   for (const decryptionKey of decryptionKeys) {
     try {
       // logger.info(`using decryption key: ${decryptionKey}`);
       // convert encryption key to buffer
-      const key = Buffer.from(decryptionKey, "base64");
+      const key: any = Buffer.from(decryptionKey, "base64");
 
       // create decryption iv/nonce for this packet
-      const nonceBuffer = createNonce(packet.id, packet.from);
+      const nonceBuffer: any = createNonce(packet.id, packet.from);
 
       // create aes-128-ctr decipher
       const decipher = crypto.createDecipheriv("aes-128-ctr", key, nonceBuffer);

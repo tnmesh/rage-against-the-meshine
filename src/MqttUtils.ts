@@ -4,6 +4,7 @@ import { decrypt } from "./decrypt";
 import meshRedis from "./MeshRedis";
 import { nodeId2hex } from "./NodeUtils";
 import logger from "./Logger";
+import { Message } from "protobufjs";
 
 const handleMqttMessage = async (topic, message, MQTT_TOPICS, meshPacketCache, NODE_INFO_UPDATES, MQTT_BROKER_URL) => {
   try {
@@ -12,7 +13,8 @@ const handleMqttMessage = async (topic, message, MQTT_TOPICS, meshPacketCache, N
         if (topic.includes("/stat/")) {
           return;
         }
-        let envelope;
+        let envelope: Message<{}>;
+
         try {
           envelope = ServiceEnvelope.decode(message);
         } catch (envDecodeErr) {
@@ -48,6 +50,7 @@ const handleMqttMessage = async (topic, message, MQTT_TOPICS, meshPacketCache, N
           if (portnum === 1) {
             meshPacketCache.add(envelope, topic, MQTT_BROKER_URL);
           } else if (portnum === 3) {
+            logger.info('POSITION_APP');
             const from = envelope.packet.from.toString(16);
             const isTrackerNode = await meshRedis.isTrackerNode(from);
             const isBalloonNode = await meshRedis.isBalloonNode(from);

@@ -1,3 +1,5 @@
+import { CacheType, ChatInputCommandInteraction } from "discord.js";
+
 const nodeId2hex = (nodeId: string | number) => {
   return typeof nodeId === "number"
     ? nodeId.toString(16).padStart(8, "0")
@@ -29,12 +31,15 @@ const validateNodeId = (nodeId: string): string | null => {
   return null;
 };
 
-const fetchNodeId = (interaction: any): string | null => {
+const fetchNodeId = (interaction: ChatInputCommandInteraction<CacheType>): string | null => {
   let nodeId = interaction.options
-    .getString("nodeid")
-    .replace("https://meshview.bayme.sh/packet_list/", "")
+    .getString("nodeid")?.replace("https://malla.tnmesh.org/node/", "")
     .replace("!", "")
     .trim();
+
+  if (nodeId === undefined || nodeId === null) {
+    return null;
+  }
 
   return validateNodeId(nodeId);
 };
