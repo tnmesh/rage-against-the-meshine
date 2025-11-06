@@ -135,3 +135,5 @@ dist
 /prisma/discord.db
 
 /src/protobufs/
+config.json
+config.yml
