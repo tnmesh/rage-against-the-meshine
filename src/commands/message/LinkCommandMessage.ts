@@ -2,6 +2,7 @@ import { Guild, Message, TextChannel } from "discord.js";
 import CommandMessage from "./CommandMessage";
 import meshDB from "../../MeshDB";
 import { fetchUserRoles } from "../../DiscordUtils";
+import logger from "../../Logger";
 
 export default class LinkCommandMessage extends CommandMessage {
 
@@ -26,8 +27,8 @@ export default class LinkCommandMessage extends CommandMessage {
 
         const roles: string[] = await fetchUserRoles(guild, message.author.id);
 
-        if (!roles || !(roles.includes("Moderator") && roles.includes("Admin"))) {
-            await channel.send('You do not have permission to use this command');
+        if (roles.length === 0 || !roles.includes("Admin")) {
+            await channel.send('You do not have permi2ssion to use this command');
             return;
         }
 
@@ -111,7 +112,7 @@ export default class LinkCommandMessage extends CommandMessage {
 
         let content: string = '';
         links.forEach(link => {
-            content += `- ${link.url}\n`
+            content += `- <${link.url}>\n`
         });
 
         await channel.send(content);
