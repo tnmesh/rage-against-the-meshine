@@ -2,16 +2,17 @@ import * as fsPromises from 'fs/promises';
 import logger from './Logger';
 
 interface ConfigInterface {
+    environment: string;
+    discord: DiscordConfigInterface;
     availableLinkTypes: string[];
-    guilds: GuildConfigMap[];
     mqtt: MqttConfigInterface;
     redis: RedisConfigInterface;
-    discord: DiscordConfigInterface;
 }
 
 interface DiscordConfigInterface {
     token: string;
     clientId: string;
+    guilds: GuildConfigMap[];
 }
 
 interface MqttConfigInterface {
@@ -47,6 +48,7 @@ class Config {
 
             // this.validateConfiguration();
             logger.info('Loaded config.json');
+            logger.info(`Environment: ${this.content.environment}`);
         } catch (error: any) {
             logger.error(error)
         }
@@ -57,9 +59,7 @@ class Config {
             throw new Error('Missing config.json');
         }
 
-        // if (thisc)
-
-        if (this.content.guilds.length === 0) {
+        if (this.content.discord.guilds.length === 0) {
             throw new Error('No configured guilds. Exiting');
         }
     }
