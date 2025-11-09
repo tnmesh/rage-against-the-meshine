@@ -1,4 +1,5 @@
-import { ChatInputCommandInteraction, Guild } from "discord.js";
+import { CacheType, ChatInputCommandInteraction, Guild } from "discord.js";
+import { fetchNodeId as _fetchNodeId } from "../NodeUtils";
 
 export default abstract class Command {
     protected name: string;
@@ -8,4 +9,9 @@ export default abstract class Command {
     }
 
     abstract handle(guild: Guild, interaction: ChatInputCommandInteraction): Promise<void>;
+
+    public fetchNodeId(interaction: ChatInputCommandInteraction<CacheType>): string | null {
+      return _fetchNodeId(interaction);
+    };
+
 }

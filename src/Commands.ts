@@ -11,6 +11,9 @@ import UnbanNodeCommand from "./commands/UnbanNodeCommand";
 import NodesCommand from "./commands/NodesCommand";
 import CommandMessage from "./commands/message/CommandMessage";
 import MqttCommand from "./commands/message/MqttCommand";
+import TestCommand from "./commands/TestCommand";
+import WhoisCommand from "./commands/WhoisCommand";
+import WhoisMessageCommand from "./commands/message/WhoisMessageCommand";
 
 export type CommandType = {
   name: string;
@@ -37,23 +40,15 @@ export const messageCommands: CommandMessageType[] = [
     name: "mqtt",
     description: "View MQTT details",
     class: new MqttCommand
+  },
+  {
+    name: "whois",
+    description: "View information for a node that has been seen by an MQTT gateway",
+    class: new WhoisMessageCommand
   }
 ];
 
 export const commands: CommandType[] = [
-  // {
-  //   name: "nodes",
-  //   description: "Claim a node you own, and only ones you own, and link it to your discord",
-  //   class: new NodesCommand,
-  //   options: [
-  //     {
-  //       name: "user",
-  //       type: ApplicationCommandOptionType.User,
-  //       description: "Nodes you own or that someone else owns",
-  //       required: false,
-  //     },
-  //   ],
-  // },
   {
     name: "linknode",
     description: "Claim a node you own, and only ones you own, and link it to your discord",
@@ -158,4 +153,23 @@ export const commands: CommandType[] = [
       },
     ],
   },
+  {
+    name: "whois",
+    description: "View information for a node that has been seen by an MQTT gateway",
+    class: new WhoisCommand,
+    options: [
+      {
+        name: "nodeid",
+        type: ApplicationCommandOptionType.String,
+        description: "The hex or integer node ID to view",
+        required: true,
+      },
+    ],
+  },
+  // {
+  //   name: "test",
+  //   description: "Test Command",
+  //   class: new TestCommand,
+  //   options: [],
+  // },
 ];

@@ -254,6 +254,7 @@ class MeshRedis {
 
   async getDiscordUserId(hexNodeId: string) {
     try {
+      hexNodeId = hexNodeId.replace("!", "");
       if (!hexNodeId || hexNodeId.length != "dd0b9347".length) {
         return "Invalid Node Id";
       }
