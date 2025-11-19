@@ -8,15 +8,15 @@ import AddBalloonCommand from "./commands/AddBalloonCommand";
 import RemoveBalloonCoomand from "./commands/RemoveBalloonCommand";
 import BanNodeCommand from "./commands/BanNodeCommand";
 import UnbanNodeCommand from "./commands/UnbanNodeCommand";
-import NodesCommand from "./commands/NodesCommand";
+// import NodesCommand from "./commands/NodesCommand";
 import CommandMessage from "./commands/message/CommandMessage";
 import MqttCommand from "./commands/message/MqttCommand";
-import TestCommand from "./commands/TestCommand";
+// import TestCommand from "./commands/TestCommand";
 import WhoisCommand from "./commands/WhoisCommand";
 import WhoisMessageCommand from "./commands/message/WhoisMessageCommand";
-import AnalyticsCommand from "./commands/AnalyticsCommand";
-import MallaCommand from "@commands/malla/MallaCommand";
-import PositionCommand from "@commands/PositionCommand";
+// import AnalyticsCommand from "./commands/AnalyticsCommand";
+// import MallaCommand from "@commands/malla/MallaCommand";
+// import PositionCommand from "@commands/PositionCommand";
 import { Flags } from "Flags";
 import FlagCommand from "@commands/FlagCommand";
 
@@ -172,25 +172,25 @@ export const commands: CommandType[] = [
       },
     ],
   },
-  {
-    name: "analytics",
-    description: "View analytics of the mesh network (powered by Malla)",
-    class: new AnalyticsCommand,
-    options: [],
-  },
-  {
-    name: "nodes",
-    description: "View information all nodes or those belonging to a user",
-    class: new NodesCommand,
-    options: [
-      {
-        name: "user",
-        type: ApplicationCommandOptionType.User,
-        description: "The discord user to view nodes for",
-        required: false,
-      },
-    ],
-  },
+  // {
+  //   name: "analytics",
+  //   description: "View analytics of the mesh network (powered by Malla)",
+  //   class: new AnalyticsCommand,
+  //   options: [],
+  // },
+  // {
+  //   name: "nodes",
+  //   description: "View information all nodes or those belonging to a user",
+  //   class: new NodesCommand,
+  //   options: [
+  //     {
+  //       name: "user",
+  //       type: ApplicationCommandOptionType.User,
+  //       description: "The discord user to view nodes for",
+  //       required: false,
+  //     },
+  //   ],
+  // },
   // {
   //   name: "position",
   //   description: "Start position updates from node in discord",
